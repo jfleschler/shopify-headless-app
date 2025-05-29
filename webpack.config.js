@@ -3,14 +3,23 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
+  const isDevBuild = env && env.dev;
+  
+  // Determine filename based on build type
+  let filename;
+  if (isProduction) {
+    filename = 'shopify-headless-app.min.js';
+  } else if (isDevBuild) {
+    filename = 'shopify-headless-app.dev.js';
+  } else {
+    filename = 'shopify-headless-app.js';
+  }
 
   return {
     entry: './src/index.js',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: isProduction
-        ? 'shopify-headless-app.min.js'
-        : 'shopify-headless-app.js',
+      filename,
       library: 'ShopifyHeadlessApp',
       libraryTarget: 'umd',
       globalObject: 'this',
@@ -21,6 +30,8 @@ module.exports = (env, argv) => {
     plugins: [
       new Dotenv({
         systemvars: true,
+        // Override cache TTL for dev builds
+        defaults: isDevBuild ? { CACHE_TTL: '0' } : undefined,
       }),
     ],
     module: {
