@@ -15,7 +15,7 @@ export const addToCart = (variantId, qty = 1) => {
     cart.push({ variantId, quantity: qty });
   }
   sync();
-  
+
   // Clear stored cart ID when local cart changes
   // This ensures we create a fresh cart on checkout
   localStorage.removeItem('shopifyCartId');

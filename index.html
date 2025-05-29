@@ -207,6 +207,16 @@
 
         // Listen for cart updates
         document.addEventListener('cartUpdated', updateCartDisplay);
+        
+        // Load cart tests for development
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          import('./src/cart-tests.js').then(module => {
+            console.log('🧪 Cart API tests loaded for development');
+            console.log('💡 Try: CartTests.debugCartState() in console');
+          }).catch(err => {
+            console.log('ℹ️ Cart tests not available (normal in production)');
+          });
+        }
       });
 
       // Allow search on Enter key

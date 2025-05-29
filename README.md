@@ -154,6 +154,17 @@ This project has been updated to use Shopify's modern **Cart API** instead of th
 - All cart operations now use the Cart API GraphQL mutations
 - Cart IDs are stored locally for better cart persistence
 
+## Troubleshooting
+
+If you encounter issues with the Cart API or checkout functionality:
+
+📋 **See [CART_API_MIGRATION.md](./CART_API_MIGRATION.md)** for detailed troubleshooting guide
+
+Common issues:
+- **Checkout not working?** Check your Storefront API credentials
+- **Invalid variant IDs?** Make sure you're using real product variant IDs from your store
+- **Environment variables not loading?** Verify your `.env` file and build process
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
