@@ -8,6 +8,7 @@ export * as Checkout from './checkout.js';
 export * as Render from './renderers.js';
 export { paginate } from './pagination.js';
 export * as Utils from './utils.js';
+export { clearCache, debugCache } from './cache.js';
 
 // Initialize when used as a script tag
 if (typeof window !== 'undefined') {

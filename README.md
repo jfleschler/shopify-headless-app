@@ -8,9 +8,9 @@ A headless Shopify application using JavaScript for managing products, collectio
 
 - Product browsing and search
 - Collection management
-- Cart functionality
+- Cart functionality with localStorage persistence
 - Checkout integration
-- Caching for performance
+- **localStorage cache persistence** for products, collections, and search results
 - Clean separation of GraphQL queries
 
 ## Setup
@@ -153,6 +153,41 @@ This project has been updated to use Shopify's modern **Cart API** instead of th
 - Old checkout URLs using deprecated Checkout API will no longer work
 - All cart operations now use the Cart API GraphQL mutations
 - Cart IDs are stored locally for better cart persistence
+
+## Cache System
+
+The application now uses **localStorage for cache persistence**, meaning cached data (products, collections, search results) will persist between browser sessions.
+
+### Cache Management
+
+**Debugging Cache:**
+```javascript
+// In browser console
+CartTests.debugCacheState();        // Show all cache contents
+ShopifyCacheDebug.debugCache();     // Detailed cache view
+```
+
+**Clearing Cache:**
+```javascript
+// Clear all cache
+ShopifyCacheDebug.clearCache();
+
+// Clear specific cache type
+ShopifyCacheDebug.clearCache('products');
+ShopifyCacheDebug.clearCache('collections');
+ShopifyCacheDebug.clearCache('search');
+```
+
+**Cache Location:**
+Cache data is stored in localStorage with these keys:
+- `shopify-cache-productById` - Product details by ID
+- `shopify-cache-productByHandle` - Product details by handle
+- `shopify-cache-collections` - Products within collections
+- `shopify-cache-search` - Search results
+- `shopify-cache-collectionsList` - List of all collections
+
+**Cache Duration:**
+Cache entries expire after 5 minutes (configurable via `CACHE_TTL` environment variable).
 
 ## Troubleshooting
 

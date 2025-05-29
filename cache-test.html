@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache Persistence Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        .log {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .cache-status {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopify Headless App - Cache Persistence Test</h1>
+    
+    <div class="cache-status">
+        <strong>📦 Cache Storage:</strong> This page tests the new localStorage cache persistence. 
+        Cache data should now persist between page reloads and browser sessions!
+    </div>
+
+    <div class="test-section">
+        <h3>🔍 Cache Status</h3>
+        <button onclick="checkCacheStatus()">Check Current Cache</button>
+        <button onclick="clearAllCache()">Clear All Cache</button>
+        <div id="cache-status" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🧪 Test Cache Functionality</h3>
+        <p>These buttons will trigger API calls that should be cached in localStorage:</p>
+        <button onclick="testCollectionsCache()">Test Collections Cache</button>
+        <button onclick="testSearchCache()">Test Search Cache</button>
+        <button onclick="testProductsCache()">Test Products Cache</button>
+        <div id="test-results" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📋 Instructions</h3>
+        <ol>
+            <li>Click "Check Current Cache" to see current cache state</li>
+            <li>Click one of the test buttons to trigger API calls</li>
+            <li>Check cache again to see data was stored</li>
+            <li>Reload the page and check cache - data should persist!</li>
+            <li>Open Developer Tools → Application → Local Storage to see the cache entries</li>
+        </ol>
+    </div>
+
+    <script src="./dist/shopify-headless-app.min.js"></script>
+    <script>
+        function log(message, elementId = 'test-results') {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            element.textContent += `[${timestamp}] ${message}\n`;
+            element.scrollTop = element.scrollHeight;
+            console.log(message);
+        }
+
+        function checkCacheStatus() {
+            const statusElement = document.getElementById('cache-status');
+            statusElement.textContent = '';
+            
+            log('🔍 Checking cache status...', 'cache-status');
+            
+            const cacheKeys = [
+                'shopify-cache-productById',
+                'shopify-cache-productByHandle', 
+                'shopify-cache-collections',
+                'shopify-cache-search',
+                'shopify-cache-collectionsList'
+            ];
+            
+            let totalItems = 0;
+            
+            cacheKeys.forEach(key => {
+                const data = localStorage.getItem(key);
+                if (data) {
+                    try {
+                        const parsed = JSON.parse(data);
+                        const itemCount = key === 'shopify-cache-collectionsList' 
+                            ? (parsed ? 1 : 0)
+                            : Object.keys(parsed).length;
+                        totalItems += itemCount;
+                        log(`✅ ${key}: ${itemCount} items`, 'cache-status');
+                    } catch (e) {
+                        log(`❌ ${key}: Invalid data`, 'cache-status');
+                    }
+                } else {
+                    log(`⚪ ${key}: No data`, 'cache-status');
+                }
+            });
+            
+            log(`\n📊 Total cached items: ${totalItems}`, 'cache-status');
+            
+            if (window.CartTests) {
+                log('\n💡 You can also use CartTests.debugCacheState() in console', 'cache-status');
+            }
+        }
+
+        function clearAllCache() {
+            if (window.ShopifyCacheDebug) {
+                window.ShopifyCacheDebug.clearCache();
+                log('🧹 All cache cleared using ShopifyCacheDebug.clearCache()');
+            } else {
+                // Manual cleanup
+                const cacheKeys = [
+                    'shopify-cache-productById',
+                    'shopify-cache-productByHandle', 
+                    'shopify-cache-collections',
+                    'shopify-cache-search',
+                    'shopify-cache-collectionsList'
+                ];
+                
+                cacheKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                log('🧹 All cache cleared manually');
+            }
+            
+            checkCacheStatus();
+        }
+
+        async function testCollectionsCache() {
+            log('🧪 Testing collections cache...');
+            
+            try {
+                const startTime = Date.now();
+                const collections = await ShopifyHeadlessApp.Collections.fetchCollections();
+                const endTime = Date.now();
+                
+                log(`✅ Fetched ${collections.length} collections in ${endTime - startTime}ms`);
+                log('📦 Data should now be cached in localStorage');
+                
+                // Check cache immediately
+                setTimeout(() => {
+                    checkCacheStatus();
+                }, 100);
+                
+            } catch (error) {
+                log(`❌ Error: ${error.message}`);
+                log('💡 Make sure your .env file has valid Shopify credentials');
+            }
+        }
+
+        async function testSearchCache() {
+            log('🧪 Testing search cache...');
+            
+            try {
+                const searchTerm = 'test';
+                const startTime = Date.now();
+                const results = await ShopifyHeadlessApp.Search.searchProducts(searchTerm);
+                const endTime = Date.now();
+                
+                log(`✅ Search for "${searchTerm}" returned ${results.length} results in ${endTime - startTime}ms`);
+                log('📦 Search results should now be cached in localStorage');
+                
+                // Check cache immediately
+                setTimeout(() => {
+                    checkCacheStatus();
+                }, 100);
+                
+            } catch (error) {
+                log(`❌ Error: ${error.message}`);
+                log('💡 Make sure your .env file has valid Shopify credentials');
+            }
+        }
+
+        async function testProductsCache() {
+            log('🧪 Testing products cache...');
+            
+            try {
+                const startTime = Date.now();
+                const products = await ShopifyHeadlessApp.Collections.fetchProductsByCollection('featured');
+                const endTime = Date.now();
+                
+                log(`✅ Fetched ${products.length} products from "featured" collection in ${endTime - startTime}ms`);
+                log('📦 Products should now be cached in localStorage');
+                
+                // Check cache immediately
+                setTimeout(() => {
+                    checkCacheStatus();
+                }, 100);
+                
+            } catch (error) {
+                log(`❌ Error: ${error.message}`);
+                log('💡 Make sure your .env file has valid Shopify credentials');
+            }
+        }
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🚀 Cache persistence test page loaded');
+            log('💡 Use the buttons above to test cache functionality');
+            
+            // Check initial cache status
+            checkCacheStatus();
+        });
+    </script>
+</body>
+</html>
