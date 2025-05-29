@@ -141,13 +141,25 @@
       </button>
     </div>
 
-    <script src="./dist/shopify-headless-app.js"></script>
+    <script src="https://jfleschler.github.io/shopify-headless-app/shopify-headless-app.min.js"></script>
     <script>
       async function loadCollections() {
         try {
           const collections =
             await ShopifyHeadlessApp.Collections.fetchCollections();
           ShopifyHeadlessApp.Render.renderCollections(collections);
+        } catch (error) {
+          console.error('Error loading collections:', error);
+        }
+      }
+
+      async function loadProducts() {
+        try {
+          const products =
+            await ShopifyHeadlessApp.Collections.fetchProductsByCollection(
+              'Shirts'
+            );
+          ShopifyHeadlessApp.Render.renderProducts(products);
         } catch (error) {
           console.error('Error loading collections:', error);
         }
@@ -191,6 +203,7 @@
       document.addEventListener('DOMContentLoaded', async () => {
         await loadCollections();
         await updateCartDisplay();
+        await loadProducts();
 
         // Listen for cart updates
         document.addEventListener('cartUpdated', updateCartDisplay);

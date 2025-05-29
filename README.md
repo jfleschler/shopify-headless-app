@@ -127,6 +127,33 @@ shopify-headless-app
 - The application allows users to browse products, view collections, search for items, manage their cart, and proceed to checkout.
 - The UI components are rendered dynamically based on the data fetched from the Shopify API.
 
+## Checkout
+- `checkout()` - Create cart and redirect to Shopify checkout (uses modern Cart API)
+- `checkoutExistingCart()` - Use existing cart or create new one for checkout
+- `createCart(lineItems)` - Create a new Shopify cart
+- `getCartDetails(cartId)` - Get cart details by ID
+- `addToCartAPI(cartId, lineItems)` - Add items to existing cart
+
+## Cart API Migration
+
+This project has been updated to use Shopify's modern **Cart API** instead of the deprecated Checkout API. The new implementation:
+
+✅ **Uses Cart API** - Modern, supported approach  
+✅ **Better Performance** - More efficient cart operations  
+✅ **Enhanced Features** - Better cart management capabilities  
+✅ **Future-Proof** - Won't be deprecated like the old Checkout API  
+
+### Key Changes:
+- `checkout()` now creates a cart using Cart API and redirects to `checkoutUrl`
+- Cart operations are more robust with proper error handling
+- Local cart changes automatically invalidate stored cart IDs
+- Supports both new cart creation and existing cart checkout
+
+### Migration Notes:
+- Old checkout URLs using deprecated Checkout API will no longer work
+- All cart operations now use the Cart API GraphQL mutations
+- Cart IDs are stored locally for better cart persistence
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
