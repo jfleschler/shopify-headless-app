@@ -8,7 +8,9 @@ module.exports = (env, argv) => {
     entry: './src/index.js',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: isProduction ? 'shopify-headless-app.min.js' : 'shopify-headless-app.js',
+      filename: isProduction
+        ? 'shopify-headless-app.min.js'
+        : 'shopify-headless-app.js',
       library: 'ShopifyHeadlessApp',
       libraryTarget: 'umd',
       globalObject: 'this',
@@ -36,14 +38,17 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    optimization: isProduction ? {
-      minimize: true,
-      sideEffects: false,
-    } : {},
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    port: 8080,
-    hot: true,
-    open: true,
-  },
-});
+    optimization: isProduction
+      ? {
+          minimize: true,
+          sideEffects: false,
+        }
+      : {},
+    devServer: {
+      contentBase: path.resolve(__dirname, 'dist'),
+      port: 8080,
+      hot: true,
+      open: true,
+    },
+  };
+};
