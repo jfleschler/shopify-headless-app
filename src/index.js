@@ -10,6 +10,9 @@ export { paginate } from './pagination.js';
 export * as Utils from './utils.js';
 export { clearCache, debugCache } from './cache.js';
 
+// Import validateConfig for internal use
+import { validateConfig } from './utils.js';
+
 // Initialize when used as a script tag
 if (typeof window !== 'undefined') {
   document.addEventListener('DOMContentLoaded', async () => {
@@ -17,7 +20,7 @@ if (typeof window !== 'undefined') {
 
     try {
       // Validate configuration
-      Utils.validateConfig();
+      validateConfig();
       console.log('Configuration validated successfully');
     } catch (error) {
       console.error('Configuration error:', error.message);
