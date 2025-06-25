@@ -128,6 +128,7 @@ shopify-headless-app
 - The UI components are rendered dynamically based on the data fetched from the Shopify API.
 
 ## Checkout
+
 - `checkout()` - Create cart and redirect to Shopify checkout (uses modern Cart API)
 - `checkoutExistingCart()` - Use existing cart or create new one for checkout
 - `createCart(lineItems)` - Create a new Shopify cart
@@ -138,18 +139,20 @@ shopify-headless-app
 
 This project has been updated to use Shopify's modern **Cart API** instead of the deprecated Checkout API. The new implementation:
 
-✅ **Uses Cart API** - Modern, supported approach  
-✅ **Better Performance** - More efficient cart operations  
-✅ **Enhanced Features** - Better cart management capabilities  
-✅ **Future-Proof** - Won't be deprecated like the old Checkout API  
+✅ **Uses Cart API** - Modern, supported approach
+✅ **Better Performance** - More efficient cart operations
+✅ **Enhanced Features** - Better cart management capabilities
+✅ **Future-Proof** - Won't be deprecated like the old Checkout API
 
 ### Key Changes:
+
 - `checkout()` now creates a cart using Cart API and redirects to `checkoutUrl`
 - Cart operations are more robust with proper error handling
 - Local cart changes automatically invalidate stored cart IDs
 - Supports both new cart creation and existing cart checkout
 
 ### Migration Notes:
+
 - Old checkout URLs using deprecated Checkout API will no longer work
 - All cart operations now use the Cart API GraphQL mutations
 - Cart IDs are stored locally for better cart persistence
@@ -161,13 +164,15 @@ The application now uses **localStorage for cache persistence**, meaning cached 
 ### Cache Management
 
 **Debugging Cache:**
+
 ```javascript
 // In browser console
-CartTests.debugCacheState();        // Show all cache contents
-ShopifyCacheDebug.debugCache();     // Detailed cache view
+CartTests.debugCacheState(); // Show all cache contents
+ShopifyCacheDebug.debugCache(); // Detailed cache view
 ```
 
 **Clearing Cache:**
+
 ```javascript
 // Clear all cache
 ShopifyCacheDebug.clearCache();
@@ -180,6 +185,7 @@ ShopifyCacheDebug.clearCache('search');
 
 **Cache Location:**
 Cache data is stored in localStorage with these keys:
+
 - `shopify-cache-productById` - Product details by ID
 - `shopify-cache-productByHandle` - Product details by handle
 - `shopify-cache-collections` - Products within collections
@@ -196,6 +202,7 @@ If you encounter issues with the Cart API or checkout functionality:
 📋 **See [CART_API_MIGRATION.md](./CART_API_MIGRATION.md)** for detailed troubleshooting guide
 
 Common issues:
+
 - **Checkout not working?** Check your Storefront API credentials
 - **Invalid variant IDs?** Make sure you're using real product variant IDs from your store
 - **Environment variables not loading?** Verify your `.env` file and build process

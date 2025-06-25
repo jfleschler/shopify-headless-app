@@ -5,11 +5,13 @@
 ### 1. **Checkout Button Not Working**
 
 **Symptoms:**
+
 - Clicking checkout does nothing
 - Console shows errors about cart creation
 - Getting 401/403 errors
 
 **Solutions:**
+
 ```javascript
 // Check your credentials in browser console
 console.log('Domain:', window.ShopifyHeadlessApp.Config.SHOPIFY_DOMAIN);
@@ -22,10 +24,12 @@ CartTests.debugCartState();
 ### 2. **Invalid Variant IDs**
 
 **Symptoms:**
-- Cart creation fails with "Invalid variant ID" 
+
+- Cart creation fails with "Invalid variant ID"
 - Console shows merchandise errors
 
 **Solutions:**
+
 - Make sure variant IDs are in format: `gid://shopify/ProductVariant/123456789`
 - Use real product variant IDs from your store
 - Test with products from your actual Shopify store
@@ -33,10 +37,12 @@ CartTests.debugCartState();
 ### 3. **Environment Variables Not Loading**
 
 **Symptoms:**
+
 - Getting default placeholder values
 - STOREFRONT_TOKEN shows "your-storefront-access-token"
 
 **Solutions:**
+
 ```bash
 # Check your .env file exists
 ls -la .env
@@ -51,15 +57,19 @@ npm run build
 ### 4. **GitHub Actions Build Failing**
 
 **Symptoms:**
+
 - Actions show environment variable errors
 - Build succeeds but runtime shows placeholder values
 
 **Solutions:**
+
 1. Check GitHub repository secrets:
+
    - Go to Settings → Secrets and Variables → Actions
    - Verify `SHOPIFY_DOMAIN` and `STOREFRONT_TOKEN` are set
 
 2. Update workflow file to use secrets properly:
+
 ```yaml
 env:
   SHOPIFY_DOMAIN: ${{ secrets.SHOPIFY_DOMAIN }}
@@ -69,10 +79,12 @@ env:
 ### 5. **Cart Items Not Persisting**
 
 **Symptoms:**
+
 - Cart empties on page refresh
 - Cart count shows 0 unexpectedly
 
 **Solutions:**
+
 ```javascript
 // Check localStorage
 console.log('Stored cart:', localStorage.getItem('shopifyCart'));
@@ -101,12 +113,14 @@ ShopifyHeadlessApp.Checkout.checkout();
 ### Test with Real Products
 
 1. **Get real variant IDs:**
+
    - Go to your Shopify admin
    - Find a product → Variants
    - Copy the variant ID (usually a long number)
    - Format as: `gid://shopify/ProductVariant/YOUR_VARIANT_ID`
 
 2. **Test the full flow:**
+
 ```javascript
 // Use real variant ID from your store
 const realVariantId = 'gid://shopify/ProductVariant/123456789';
@@ -117,6 +131,7 @@ ShopifyHeadlessApp.Checkout.checkout();
 ## API Differences: Old vs New
 
 ### Old Checkout API (Deprecated)
+
 ```javascript
 // ❌ Old way - no longer works
 const mutation = `mutation($input: CheckoutCreateInput!) {
@@ -127,13 +142,14 @@ const mutation = `mutation($input: CheckoutCreateInput!) {
 ```
 
 ### New Cart API (Current)
+
 ```javascript
 // ✅ New way - uses Cart API
 const mutation = `mutation cartCreate($input: CartInput!) {
   cartCreate(input: $input) {
-    cart { 
-      id 
-      checkoutUrl 
+    cart {
+      id
+      checkoutUrl
     }
   }
 }`;

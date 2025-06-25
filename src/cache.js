@@ -6,7 +6,7 @@ const CACHE_KEYS = {
   productByHandle: 'shopify-cache-productByHandle',
   collections: 'shopify-cache-collections',
   search: 'shopify-cache-search',
-  collectionsList: 'shopify-cache-collectionsList'
+  collectionsList: 'shopify-cache-collectionsList',
 };
 
 // Helper function to get data from localStorage
@@ -40,28 +40,31 @@ const cache = {
   get productById() {
     return getFromLocalStorage(CACHE_KEYS.productById);
   },
-  
+
   get productByHandle() {
     return getFromLocalStorage(CACHE_KEYS.productByHandle);
   },
-  
+
   get collections() {
     return getFromLocalStorage(CACHE_KEYS.collections);
   },
-  
+
   get search() {
     return getFromLocalStorage(CACHE_KEYS.search);
   },
-  
+
   get collectionsList() {
     try {
       const stored = localStorage.getItem(CACHE_KEYS.collectionsList);
       return stored ? JSON.parse(stored) : null;
     } catch (error) {
-      console.warn('Cache: Failed to parse collectionsList from localStorage:', error);
+      console.warn(
+        'Cache: Failed to parse collectionsList from localStorage:',
+        error
+      );
       return null;
     }
-  }
+  },
 };
 
 export const isCacheValid = (entry) =>
@@ -72,31 +75,32 @@ export const getCache = (store, key) => {
   if (key === 'collectionsList') {
     return cache.collectionsList;
   }
-  
+
   // For other stores, get the data object and return the specific key
-  const storeData = typeof store === 'object' && store.constructor === Object 
-    ? store 
-    : getFromLocalStorage(CACHE_KEYS[getStoreKey(store)]);
-  
+  const storeData =
+    typeof store === 'object' && store.constructor === Object
+      ? store
+      : getFromLocalStorage(CACHE_KEYS[getStoreKey(store)]);
+
   return storeData[key];
 };
 
 export const setCache = (store, key, data) => {
   const entry = { data, timestamp: Date.now() };
-  
+
   // Handle special case for collectionsList
   if (key === 'collectionsList') {
     saveToLocalStorage(CACHE_KEYS.collectionsList, entry);
     return;
   }
-  
+
   // Determine which localStorage key to use
   const storeKey = getStoreKey(store);
   if (!storeKey) {
     console.warn('Cache: Unknown store type, cannot save to localStorage');
     return;
   }
-  
+
   // Get current store data, update it, and save back
   const storeData = getFromLocalStorage(CACHE_KEYS[storeKey]);
   storeData[key] = entry;
@@ -110,11 +114,11 @@ const getStoreKey = (store) => {
   if (store === cache.productByHandle) return 'productByHandle';
   if (store === cache.collections) return 'collections';
   if (store === cache.search) return 'search';
-  
+
   // If it's the main cache object, we need to check the property name
   // This happens when called like setCache(cache, 'collectionsList', data)
   if (store === cache) return null; // Will be handled by special case above
-  
+
   return null;
 };
 
@@ -125,7 +129,7 @@ export const clearCache = (storeType = null) => {
     console.log(`Cache: Cleared ${storeType} cache`);
   } else if (!storeType) {
     // Clear all cache
-    Object.values(CACHE_KEYS).forEach(key => {
+    Object.values(CACHE_KEYS).forEach((key) => {
       localStorage.removeItem(key);
     });
     console.log('Cache: Cleared all cache');
@@ -149,7 +153,7 @@ if (typeof window !== 'undefined') {
   window.ShopifyCacheDebug = {
     clearCache,
     debugCache,
-    viewCache: () => cache
+    viewCache: () => cache,
   };
 }
 

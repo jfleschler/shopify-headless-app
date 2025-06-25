@@ -9,6 +9,7 @@ The user noticed that cache data was not appearing in localStorage, only cart da
 ### 1. Updated Cache Storage (`src/cache.js`)
 
 **Before:** In-memory JavaScript objects
+
 ```javascript
 const cache = {
   productById: {},
@@ -20,10 +21,11 @@ const cache = {
 ```
 
 **After:** localStorage-backed persistence
+
 ```javascript
 // Now uses localStorage with keys:
 // - shopify-cache-productById
-// - shopify-cache-productByHandle  
+// - shopify-cache-productByHandle
 // - shopify-cache-collections
 // - shopify-cache-search
 // - shopify-cache-collectionsList
@@ -32,17 +34,20 @@ const cache = {
 ### 2. Added Cache Management Features
 
 **Debug Functions:**
+
 - `debugCache()` - Show detailed cache contents
 - `clearCache(storeType)` - Clear specific or all cache
 - `ShopifyCacheDebug` global object for browser console use
 
 **Testing Functions:**
+
 - `CartTests.debugCacheState()` - Show cache status
 - `CartTests.testCacheFunctionality()` - Test cache operations
 
 ### 3. Cache Persistence Details
 
 **Storage Format:**
+
 ```javascript
 {
   "data": { /* actual cached data */ },
@@ -51,9 +56,10 @@ const cache = {
 ```
 
 **localStorage Keys:**
+
 - `shopify-cache-productById` - Individual product details
 - `shopify-cache-productByHandle` - Products fetched by handle
-- `shopify-cache-collections` - Products within collections  
+- `shopify-cache-collections` - Products within collections
 - `shopify-cache-search` - Search results
 - `shopify-cache-collectionsList` - List of all collections
 
@@ -62,12 +68,14 @@ const cache = {
 ## Testing the Implementation
 
 ### Option 1: Use the Test Page
+
 1. Open `cache-test.html` in your browser
 2. Click buttons to trigger API calls
 3. Check cache status to see localStorage persistence
 4. Reload page - cache should persist!
 
 ### Option 2: Browser Console
+
 ```javascript
 // Test cache functionality
 await CartTests.testCacheFunctionality();
@@ -83,6 +91,7 @@ ShopifyCacheDebug.clearCache();
 ```
 
 ### Option 3: Manual Verification
+
 1. Open Developer Tools → Application → Local Storage
 2. Look for keys starting with `shopify-cache-`
 3. Trigger API calls (search, fetch collections, etc.)

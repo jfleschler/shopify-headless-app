@@ -4,7 +4,7 @@ const Dotenv = require('dotenv-webpack');
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   const isDevBuild = env && env.dev;
-  
+
   // Determine filename based on build type
   let filename;
   if (isProduction) {
