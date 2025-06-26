@@ -6,6 +6,10 @@ export const GET_COLLECTIONS = `
           id
           title
           handle
+          description
+          image {
+            url
+          }
         }
       }
     }
@@ -22,21 +26,37 @@ export const GET_PRODUCTS_BY_COLLECTION = `
               node {
                 id
                 title
-                images(first: 1) {
+                handle
+                description
+                images(first: 5) {
                   edges {
                     node {
                       url
+                      altText
                     }
                   }
                 }
-                variants(first: 1) {
+                variants(first: 10) {
                   edges {
                     node {
                       id
+                      title
                       price {
                         amount
+                        currencyCode
                       }
+                      availableForSale
                     }
+                  }
+                }
+                priceRange {
+                  minVariantPrice {
+                    amount
+                    currencyCode
+                  }
+                  maxVariantPrice {
+                    amount
+                    currencyCode
                   }
                 }
               }

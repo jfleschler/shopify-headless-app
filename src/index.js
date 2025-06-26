@@ -13,8 +13,15 @@ export { clearCache, debugCache } from './cache.js';
 // Import validateConfig for internal use
 import { validateConfig } from './utils.js';
 
+// Import and export declarative system
+import ShopifyDeclarativeLoader from './declarative.js';
+export { ShopifyDeclarativeLoader };
+
 // Initialize when used as a script tag
 if (typeof window !== 'undefined') {
+  // Make declarative loader available globally
+  window.ShopifyDeclarativeLoader = ShopifyDeclarativeLoader;
+  
   document.addEventListener('DOMContentLoaded', async () => {
     console.log('Shopify Headless App loaded');
 

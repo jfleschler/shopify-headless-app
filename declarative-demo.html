@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopify Declarative System Demo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .product-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: box-shadow 0.3s ease;
+      }
+
+      .product-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .product-card h3 {
+        margin: 0.5rem 0;
+        color: #333;
+      }
+
+      .price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #e74c3c;
+        margin: 0.5rem 0;
+      }
+
+      .product-detail {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin: 2rem 0;
+        padding: 2rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .product-images img {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+      }
+
+      .collection-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        background: #f9f9f9;
+      }
+
+      .collection-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .cart-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+
+      .cart-item-info {
+        flex: 1;
+      }
+
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      button:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+      }
+
+      .remove-btn {
+        background-color: #e74c3c;
+      }
+
+      .remove-btn:hover {
+        background-color: #c0392b;
+      }
+
+      select {
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .shopify-loading {
+        padding: 2rem;
+        text-align: center;
+        color: #666;
+        font-style: italic;
+      }
+
+      .shopify-error {
+        padding: 1rem;
+        background: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+        border-radius: 4px;
+        margin: 1rem 0;
+      }
+
+      section {
+        margin: 3rem 0;
+        padding: 2rem 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      h1,
+      h2 {
+        color: #2c3e50;
+      }
+
+      .demo-code {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🛍️ Shopify Declarative System Demo</h1>
+    <p>
+      This page demonstrates the power of declarative data attributes with
+      Shopify Headless App. Simply add <code>data-shopify</code> attributes to
+      any div and watch the magic happen!
+    </p>
+
+    <!-- Example 1: Products by Collection -->
+    <section>
+      <h2>📦 Products from "Shirts" Collection</h2>
+      <div class="demo-code">
+        &lt;div data-shopify="products" data-collection="shirts"
+        data-template="product-card-template" data-limit="8"&gt;&lt;/div&gt;
+      </div>
+      <div
+        class="product-grid"
+        data-shopify="products"
+        data-collection="shirts"
+        data-template="product-card-template"
+        data-limit="8"
+      ></div>
+    </section>
+
+    <!-- Example 2: Single Product -->
+    <section>
+      <h2>⭐ Featured Product</h2>
+      <div class="demo-code">
+        &lt;div data-shopify="product" data-handle="cool-shirt"
+        data-template="product-detail-template"&gt;&lt;/div&gt;
+      </div>
+      <div
+        data-shopify="product"
+        data-handle="cool-shirt"
+        data-template="product-detail-template"
+      ></div>
+    </section>
+
+    <!-- Example 3: Search Results -->
+    <section>
+      <h2>🔍 Search Results: "cool"</h2>
+      <div class="demo-code">
+        &lt;div data-shopify="search" data-query="cool"
+        data-template="product-card-template" data-limit="6"&gt;&lt;/div&gt;
+      </div>
+      <div
+        class="product-grid"
+        data-shopify="search"
+        data-query="cool"
+        data-template="product-card-template"
+        data-limit="6"
+      ></div>
+    </section>
+
+    <!-- Example 4: Collections List -->
+    <section>
+      <h2>📂 All Collections</h2>
+      <div class="demo-code">
+        &lt;div data-shopify="collections"
+        data-template="collection-card-template" data-limit="10"&gt;&lt;/div&gt;
+      </div>
+      <div
+        class="product-grid"
+        data-shopify="collections"
+        data-template="collection-card-template"
+        data-limit="10"
+      ></div>
+    </section>
+
+    <!-- Example 5: Shopping Cart -->
+    <section>
+      <h2>🛒 Shopping Cart</h2>
+      <div class="demo-code">
+        &lt;div data-shopify="cart"
+        data-template="cart-item-template"&gt;&lt;/div&gt;
+      </div>
+      <div data-shopify="cart" data-template="cart-item-template"></div>
+    </section>
+
+    <!-- TEMPLATES (Hidden from view) -->
+    <template id="product-card-template">
+      <div class="product-card">
+        <img src="{{image}}" alt="{{title}}" />
+        <h3>{{title}}</h3>
+        <p class="price">${{price}}</p>
+        <button data-add-to-cart="{{variantId}}" data-quantity="1">
+          Add to Cart
+        </button>
+      </div>
+    </template>
+
+    <template id="product-detail-template">
+      <div class="product-detail">
+        <div class="product-images">
+          {{#each images}}
+          <img src="{{this}}" alt="Product image" />
+          {{/each}}
+        </div>
+        <div class="product-info">
+          <h1>{{title}}</h1>
+          <p class="price">${{price}}</p>
+          <div class="description">{{description}}</div>
+          <select data-variant-selector>
+            {{#each variants}}
+            <option value="{{id}}">{{title}} - ${{price}}</option>
+            {{/each}}
+          </select>
+          <br /><br />
+          <button data-add-to-cart data-variant-from-selector>
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <template id="collection-card-template">
+      <div class="collection-card">
+        <img src="{{image}}" alt="{{title}}" />
+        <h3>{{title}}</h3>
+        <p>{{description}}</p>
+        <button onclick="window.location.href='/collections/{{handle}}'">
+          View Collection
+        </button>
+      </div>
+    </template>
+
+    <template id="cart-item-template">
+      <div class="cart-item">
+        <img src="{{image}}" alt="{{title}}" />
+        <div class="cart-item-info">
+          <h4>{{title}}</h4>
+          <p>Quantity: {{quantity}}</p>
+          <p class="price">Price: ${{price}}</p>
+        </div>
+        <button class="remove-btn" data-remove-cart-item="{{id}}">
+          Remove
+        </button>
+      </div>
+    </template>
+
+    <!-- Load the Shopify Headless App -->
+    <script src="./dist/shopify-headless-app.dev.js"></script>
+
+    <script>
+      // Optional: Manual initialization if needed
+      console.log('Shopify Declarative Demo loaded');
+
+      // You can also manually trigger the declarative loader
+      // new ShopifyDeclarativeLoader();
+    </script>
+  </body>
+</html>

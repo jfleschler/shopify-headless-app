@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Data Structures</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; max-width: 1000px; margin: 0 auto; }
+    .debug-section { margin: 2rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 4px; }
+    .product-card { border: 1px solid #ddd; padding: 1rem; margin: 0.5rem; display: inline-block; width: 200px; }
+    .raw-data { background: #f5f5f5; padding: 1rem; margin: 1rem 0; font-family: monospace; font-size: 0.8rem; overflow: auto; max-height: 300px; }
+    button { background: #3498db; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer; margin: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Debug Data Structures</h1>
+  
+  <div class="debug-section">
+    <h2>Cache Management</h2>
+    <button onclick="clearAllCache()">Clear All Cache</button>
+    <button onclick="showCacheState()">Show Cache State</button>
+  </div>
+
+  <div class="debug-section">
+    <h2>🎯 Test Single Product</h2>
+    <p>Testing single product by handle: "cool-shirt"</p>
+    <button onclick="testSingleProduct()">Fetch Product Data</button>
+    <div id="single-product-data" class="raw-data"></div>
+    
+    <div data-shopify="product" 
+         data-handle="cool-shirt" 
+         data-template="debug-product-template"></div>
+  </div>
+
+  <div class="debug-section">
+    <h2>🔍 Test Search</h2>
+    <p>Testing search for: "test"</p>
+    <button onclick="testSearch()">Fetch Search Data</button>
+    <div id="search-data" class="raw-data"></div>
+    
+    <div data-shopify="search" 
+         data-query="test" 
+         data-template="debug-product-template"
+         data-limit="2"></div>
+  </div>
+
+  <div class="debug-section">
+    <h2>📦 Test Collection Products</h2>
+    <p>Testing products from "shirts" collection</p>
+    <button onclick="testCollectionProducts()">Fetch Collection Data</button>
+    <div id="collection-data" class="raw-data"></div>
+    
+    <div data-shopify="products" 
+         data-collection="shirts" 
+         data-template="debug-product-template"
+         data-limit="2"></div>
+  </div>
+
+  <!-- Debug template -->
+  <template id="debug-product-template">
+    <div class="product-card">
+      <h4>{{title}}</h4>
+      <img src="{{image}}" alt="{{title}}" style="width: 100%; height: 120px; object-fit: cover;">
+      <p><strong>Price:</strong> ${{price}}</p>
+      <p><strong>ID:</strong> {{id}}</p>
+      <p><strong>Handle:</strong> {{handle}}</p>
+    </div>
+  </template>
+
+  <!-- Load the Shopify app -->
+  <script src="./dist/shopify-headless-app.dev.js"></script>
+  
+  <script>
+    async function clearAllCache() {
+      if (window.ShopifyHeadlessApp && window.ShopifyHeadlessApp.clearCache) {
+        window.ShopifyHeadlessApp.clearCache();
+        console.log('Cache cleared');
+        alert('Cache cleared! Refresh the page to see fresh data.');
+      } else {
+        console.log('Clear cache function not available');
+      }
+    }
+
+    function showCacheState() {
+      if (window.ShopifyHeadlessApp && window.ShopifyHeadlessApp.debugCache) {
+        window.ShopifyHeadlessApp.debugCache();
+      } else {
+        console.log('Debug cache function not available');
+      }
+    }
+
+    async function testSingleProduct() {
+      try {
+        const product = await window.ShopifyHeadlessApp.Products.fetchProductByHandle('cool-shirt');
+        document.getElementById('single-product-data').innerHTML = 
+          '<h4>Raw Product Data:</h4><pre>' + JSON.stringify(product, null, 2) + '</pre>';
+        console.log('Single product data:', product);
+      } catch (error) {
+        document.getElementById('single-product-data').innerHTML = 
+          '<h4>Error:</h4><pre>' + error.message + '</pre>';
+        console.error('Error fetching single product:', error);
+      }
+    }
+
+    async function testSearch() {
+      try {
+        const results = await window.ShopifyHeadlessApp.Search.searchProducts('test');
+        document.getElementById('search-data').innerHTML = 
+          '<h4>Raw Search Data:</h4><pre>' + JSON.stringify(results, null, 2) + '</pre>';
+        console.log('Search results:', results);
+      } catch (error) {
+        document.getElementById('search-data').innerHTML = 
+          '<h4>Error:</h4><pre>' + error.message + '</pre>';
+        console.error('Error fetching search results:', error);
+      }
+    }
+
+    async function testCollectionProducts() {
+      try {
+        const products = await window.ShopifyHeadlessApp.Collections.fetchProductsByCollection('shirts');
+        document.getElementById('collection-data').innerHTML = 
+          '<h4>Raw Collection Products Data:</h4><pre>' + JSON.stringify(products, null, 2) + '</pre>';
+        console.log('Collection products:', products);
+      } catch (error) {
+        document.getElementById('collection-data').innerHTML = 
+          '<h4>Error:</h4><pre>' + error.message + '</pre>';
+        console.error('Error fetching collection products:', error);
+      }
+    }
+
+    // Auto-run tests when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        console.log('Running automatic data tests...');
+        testSingleProduct();
+        testSearch();
+        testCollectionProducts();
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
