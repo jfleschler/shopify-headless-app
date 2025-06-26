@@ -1,115 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Declarative System Test</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; max-width: 800px; margin: 0 auto; }
-    .test-section { margin: 2rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 4px; }
-    .error { background: #fee; border-color: #fcc; }
-    .success { background: #efe; border-color: #cfc; }
-    .loading { background: #f0f8ff; border-color: #cce; }
-    .product-card { border: 1px solid #ddd; padding: 1rem; margin: 0.5rem; display: inline-block; }
-    .shopify-loading { color: #666; font-style: italic; }
-    .shopify-error { color: #c33; }
-    code { background: #f5f5f5; padding: 0.2rem 0.4rem; border-radius: 3px; }
-  </style>
-</head>
-<body>
-  <h1>🧪 Declarative System Test</h1>
-  <p>This page tests the declarative system with various scenarios. Check the browser console for detailed logs.</p>
-
-  <div class="test-section">
-    <h2>✅ Test 1: System Initialization</h2>
-    <p>The declarative system should initialize automatically when the page loads.</p>
-    <p id="init-status">⏳ Checking initialization...</p>
-  </div>
-
-  <div class="test-section">
-    <h2>🔍 Test 2: Missing Template (Expected Error)</h2>
-    <p>This should show an error because the template doesn't exist:</p>
-    <div data-shopify="products" 
-         data-collection="shirts" 
-         data-template="non-existent-template"
-         data-limit="3"></div>
-  </div>
-
-  <div class="test-section">
-    <h2>🏷️ Test 3: Missing Collection (Expected Error)</h2>
-    <p>This should show an error because no collection is specified:</p>
-    <div data-shopify="products" 
-         data-template="test-template"
-         data-limit="3"></div>
-    
-    <!-- Valid template for this test -->
-    <template id="test-template">
-      <div class="product-card">
-        <h3>{{title}}</h3>
-        <p>${{price}}</p>
-      </div>
-    </template>
-  </div>
-
-  <div class="test-section">
-    <h2>🎯 Test 4: Valid Configuration</h2>
-    <p>This should attempt to load products (may show API error if store not configured):</p>
-    <div data-shopify="products" 
-         data-collection="all" 
-         data-template="product-template"
-         data-limit="2"></div>
-    
-    <template id="product-template">
-      <div class="product-card">
-        <h3>{{title}}</h3>
-        <p class="price">${{price}}</p>
-        <button data-add-to-cart="{{variantId}}">Add to Cart</button>
-      </div>
-    </template>
-  </div>
-
-  <div class="test-section">
-    <h2>🛒 Test 5: Cart Display</h2>
-    <p>This should show cart contents (likely empty):</p>
-    <div data-shopify="cart" 
-         data-template="cart-template"></div>
-    
-    <template id="cart-template">
-      <div class="cart-item">
-        <strong>{{title}}</strong> - Qty: {{quantity}} - ${{price}}
-      </div>
-    </template>
-  </div>
-
-  <!-- Load the Shopify Headless App -->
-  <script src="./dist/shopify-headless-app.dev.js"></script>
-  
-  <script>
-    // Test initialization
-    setTimeout(() => {
-      const initStatus = document.getElementById('init-status');
-      if (window.ShopifyDeclarativeLoader) {
-        initStatus.innerHTML = '✅ System initialized successfully!';
-        initStatus.parentElement.classList.add('success');
-      } else {
-        initStatus.innerHTML = '❌ System failed to initialize';
-        initStatus.parentElement.classList.add('error');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Declarative System Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
       }
-    }, 1000);
+      .test-section {
+        margin: 2rem 0;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .error {
+        background: #fee;
+        border-color: #fcc;
+      }
+      .success {
+        background: #efe;
+        border-color: #cfc;
+      }
+      .loading {
+        background: #f0f8ff;
+        border-color: #cce;
+      }
+      .product-card {
+        border: 1px solid #ddd;
+        padding: 1rem;
+        margin: 0.5rem;
+        display: inline-block;
+      }
+      .shopify-loading {
+        color: #666;
+        font-style: italic;
+      }
+      .shopify-error {
+        color: #c33;
+      }
+      code {
+        background: #f5f5f5;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧪 Declarative System Test</h1>
+    <p>
+      This page tests the declarative system with various scenarios. Check the
+      browser console for detailed logs.
+    </p>
 
-    // Listen for errors
-    window.addEventListener('error', (e) => {
-      console.error('Page Error:', e.error);
-    });
+    <div class="test-section">
+      <h2>✅ Test 1: System Initialization</h2>
+      <p>
+        The declarative system should initialize automatically when the page
+        loads.
+      </p>
+      <p id="init-status">⏳ Checking initialization...</p>
+    </div>
 
-    // Log when everything is ready
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('🧪 Test page loaded');
-      console.log('Available on window:', {
-        ShopifyHeadlessApp: !!window.ShopifyHeadlessApp,
-        ShopifyDeclarativeLoader: !!window.ShopifyDeclarativeLoader
+    <div class="test-section">
+      <h2>🔍 Test 2: Missing Template (Expected Error)</h2>
+      <p>This should show an error because the template doesn't exist:</p>
+      <div
+        data-shopify="products"
+        data-collection="shirts"
+        data-template="non-existent-template"
+        data-limit="3"
+      ></div>
+    </div>
+
+    <div class="test-section">
+      <h2>🏷️ Test 3: Missing Collection (Expected Error)</h2>
+      <p>This should show an error because no collection is specified:</p>
+      <div
+        data-shopify="products"
+        data-template="test-template"
+        data-limit="3"
+      ></div>
+
+      <!-- Valid template for this test -->
+      <template id="test-template">
+        <div class="product-card">
+          <h3>{{title}}</h3>
+          <p>${{price}}</p>
+        </div>
+      </template>
+    </div>
+
+    <div class="test-section">
+      <h2>🎯 Test 4: Valid Configuration</h2>
+      <p>
+        This should attempt to load products (may show API error if store not
+        configured):
+      </p>
+      <div
+        data-shopify="products"
+        data-collection="all"
+        data-template="product-template"
+        data-limit="2"
+      ></div>
+
+      <template id="product-template">
+        <div class="product-card">
+          <h3>{{title}}</h3>
+          <p class="price">${{price}}</p>
+          <button data-add-to-cart="{{variantId}}">Add to Cart</button>
+        </div>
+      </template>
+    </div>
+
+    <div class="test-section">
+      <h2>🛒 Test 5: Cart Display</h2>
+      <p>This should show cart contents (likely empty):</p>
+      <div data-shopify="cart" data-template="cart-template"></div>
+
+      <template id="cart-template">
+        <div class="cart-item">
+          <strong>{{title}}</strong> - Qty: {{quantity}} - ${{price}}
+        </div>
+      </template>
+    </div>
+
+    <!-- Load the Shopify Headless App -->
+    <script src="./dist/shopify-headless-app.dev.js"></script>
+
+    <script>
+      // Test initialization
+      setTimeout(() => {
+        const initStatus = document.getElementById('init-status');
+        if (window.ShopifyDeclarativeLoader) {
+          initStatus.innerHTML = '✅ System initialized successfully!';
+          initStatus.parentElement.classList.add('success');
+        } else {
+          initStatus.innerHTML = '❌ System failed to initialize';
+          initStatus.parentElement.classList.add('error');
+        }
+      }, 1000);
+
+      // Listen for errors
+      window.addEventListener('error', (e) => {
+        console.error('Page Error:', e.error);
       });
-    });
-  </script>
-</body>
+
+      // Log when everything is ready
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('🧪 Test page loaded');
+        console.log('Available on window:', {
+          ShopifyHeadlessApp: !!window.ShopifyHeadlessApp,
+          ShopifyDeclarativeLoader: !!window.ShopifyDeclarativeLoader,
+        });
+      });
+    </script>
+  </body>
 </html>

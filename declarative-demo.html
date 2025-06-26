@@ -187,6 +187,21 @@
       any div and watch the magic happen!
     </p>
 
+    <!-- Debug Section -->
+    <section style="background: #f0f0f0; padding: 1rem; margin-bottom: 2rem">
+      <h2>🔍 Debug: Raw Product Data</h2>
+      <div
+        id="debug-output"
+        style="
+          font-family: monospace;
+          font-size: 12px;
+          white-space: pre-wrap;
+          max-height: 200px;
+          overflow-y: auto;
+        "
+      ></div>
+    </section>
+
     <!-- Example 1: Products by Collection -->
     <section>
       <h2>📦 Products from "Shirts" Collection</h2>
@@ -320,11 +335,34 @@
     </template>
 
     <!-- Load the Shopify Headless App -->
-    <script src="./dist/shopify-headless-app.dev.js"></script>
+    <script src="./dist/shopify-headless-app.js"></script>
 
     <script>
       // Optional: Manual initialization if needed
       console.log('Shopify Declarative Demo loaded');
+
+      // Debug script to show raw product data
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          const Collections = window.ShopifyHeadless.Collections;
+          const products = await Collections.fetchProductsByCollection(
+            'shirts'
+          );
+          const debugOutput = document.getElementById('debug-output');
+          debugOutput.textContent =
+            'Products data:\n' + JSON.stringify(products.slice(0, 2), null, 2);
+
+          if (products.length > 0) {
+            const firstProduct = products[0];
+            debugOutput.textContent +=
+              '\n\nFirst product images:\n' +
+              JSON.stringify(firstProduct.images, null, 2);
+          }
+        } catch (error) {
+          const debugOutput = document.getElementById('debug-output');
+          debugOutput.textContent = 'Error: ' + error.message;
+        }
+      });
 
       // You can also manually trigger the declarative loader
       // new ShopifyDeclarativeLoader();

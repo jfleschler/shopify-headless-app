@@ -21,7 +21,7 @@ export { ShopifyDeclarativeLoader };
 if (typeof window !== 'undefined') {
   // Make declarative loader available globally
   window.ShopifyDeclarativeLoader = ShopifyDeclarativeLoader;
-  
+
   document.addEventListener('DOMContentLoaded', async () => {
     console.log('Shopify Headless App loaded');
 

@@ -178,23 +178,11 @@ export class ShopifyDeclarativeLoader {
   renderSingle(template, item) {
     let html = template;
 
-    // Replace simple variables {{variable}}
-    html = html.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-      const value = this.getNestedProperty(item, key);
-      // Only log if value is missing for important fields
-      if (!value && ['image', 'price'].includes(key)) {
-        console.warn(
-          `Missing ${key} for item:`,
-          item.title || item.id
-        );
-      }
-      return value || '';
-    });
-
     // Handle arrays {{#each array}}...{{/each}}
     html = html.replace(
       /\{\{#each (\w+)\}\}(.*?)\{\{\/each\}\}/gs,
       (match, arrayKey, innerTemplate) => {
+        console.debug(innerTemplate);
         let array = this.getNestedProperty(item, arrayKey);
 
         // Handle different array structures
@@ -242,6 +230,16 @@ export class ShopifyDeclarativeLoader {
       }
     );
 
+    // Replace simple variables {{variable}}
+    html = html.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+      const value = this.getNestedProperty(item, key);
+      // Only log if value is missing for important fields
+      if (!value && ['image', 'price'].includes(key)) {
+        console.warn(`Missing ${key} for item:`, item.title || item.id);
+      }
+      console.debug(`Rendering ${key}:`, value);
+      return value || '';
+    });
     return html;
   }
 

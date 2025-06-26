@@ -2,7 +2,7 @@
 
 [![Build and Deploy](https://github.com/yourusername/shopify-headless-app/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/yourusername/shopify-headless-app/actions/workflows/build-and-deploy.yml)
 
-> ✅ **REFACTORING COMPLETE** - The declarative data-attribute system is now fully functional! 
+> ✅ **REFACTORING COMPLETE** - The declarative data-attribute system is now fully functional!
 > All image rendering, price formatting, and template features are working correctly.
 
 A headless Shopify application using JavaScript for managing products, collections, and cart functionality. Perfect for integrating Shopify into existing websites like Webflow.
@@ -64,62 +64,64 @@ The easiest way to use Shopify Headless App is with declarative data attributes.
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <title>My Shopify Store</title>
-</head>
-<body>
-  <!-- Your content will automatically load here -->
-  <div data-shopify="products" 
-       data-collection="shirts" 
-       data-template="product-card"
-       data-limit="8"></div>
+  <head>
+    <title>My Shopify Store</title>
+  </head>
+  <body>
+    <!-- Your content will automatically load here -->
+    <div
+      data-shopify="products"
+      data-collection="shirts"
+      data-template="product-card"
+      data-limit="8"
+    ></div>
 
-  <!-- Define how products should look -->
-  <template id="product-card">
-    <div class="product">
-      <img src="{{image}}" alt="{{title}}">
-      <h3>{{title}}</h3>
-      <p>${{price}}</p>
-      <button data-add-to-cart="{{variantId}}">Add to Cart</button>
-    </div>
-  </template>
+    <!-- Define how products should look -->
+    <template id="product-card">
+      <div class="product">
+        <img src="{{image}}" alt="{{title}}" />
+        <h3>{{title}}</h3>
+        <p>${{price}}</p>
+        <button data-add-to-cart="{{variantId}}">Add to Cart</button>
+      </div>
+    </template>
 
-  <!-- Load the app -->
-  <script src="https://your-cdn.com/shopify-headless-app.js"></script>
-</body>
+    <!-- Load the app -->
+    <script src="https://your-cdn.com/shopify-headless-app.js"></script>
+  </body>
 </html>
 ```
 
 ### 2. Available Data Attributes
 
-| Attribute | Description | Example |
-|-----------|-------------|---------|
-| `data-shopify="products"` | Load products from a collection | `data-collection="shirts"` |
-| `data-shopify="product"` | Load a single product | `data-handle="cool-shirt"` |
-| `data-shopify="collections"` | Load all collections | `data-limit="10"` |
-| `data-shopify="search"` | Search products | `data-query="summer"` |
-| `data-shopify="cart"` | Display cart contents | `data-template="cart-item"` |
+| Attribute                    | Description                     | Example                     |
+| ---------------------------- | ------------------------------- | --------------------------- |
+| `data-shopify="products"`    | Load products from a collection | `data-collection="shirts"`  |
+| `data-shopify="product"`     | Load a single product           | `data-handle="cool-shirt"`  |
+| `data-shopify="collections"` | Load all collections            | `data-limit="10"`           |
+| `data-shopify="search"`      | Search products                 | `data-query="summer"`       |
+| `data-shopify="cart"`        | Display cart contents           | `data-template="cart-item"` |
 
 ### 3. Template Variables
 
 Use these variables in your `<template>` elements:
 
-| Variable | Description |
-|----------|-------------|
-| `{{title}}` | Product/collection title |
-| `{{price}}` | Product price |
-| `{{image}}` | First product image |
-| `{{description}}` | Product description |
-| `{{variantId}}` | First variant ID (for add to cart) |
-| `{{handle}}` | Product handle (URL slug) |
+| Variable          | Description                        |
+| ----------------- | ---------------------------------- |
+| `{{title}}`       | Product/collection title           |
+| `{{price}}`       | Product price                      |
+| `{{image}}`       | First product image                |
+| `{{description}}` | Product description                |
+| `{{variantId}}`   | First variant ID (for add to cart) |
+| `{{handle}}`      | Product handle (URL slug)          |
 
 ### 4. Interactive Elements
 
-| Attribute | Description |
-|-----------|-------------|
-| `data-add-to-cart="{{variantId}}"` | Add product to cart |
-| `data-variant-selector` | Dropdown for variant selection |
-| `data-quantity="2"` | Set quantity (default: 1) |
+| Attribute                          | Description                    |
+| ---------------------------------- | ------------------------------ |
+| `data-add-to-cart="{{variantId}}"` | Add product to cart            |
+| `data-variant-selector`            | Dropdown for variant selection |
+| `data-quantity="2"`                | Set quantity (default: 1)      |
 
 ## Usage in Webflow
 
