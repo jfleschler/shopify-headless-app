@@ -55,6 +55,34 @@ Run the development server:
 npm run dev
 ```
 
+## Project Structure
+
+```
+├── src/                    # Source code
+├── dist/                   # Built files
+├── examples/              # Demo and example files
+│   ├── simple-declarative-example.html
+│   ├── declarative-demo.html
+│   ├── debug-data.html
+│   └── index.html
+├── tests/                 # Test files
+│   ├── cache-test.html
+│   └── declarative-test.html
+├── docs/                  # Documentation
+│   ├── DECLARATIVE_SYSTEM.md
+│   ├── CACHE_IMPLEMENTATION.md
+│   ├── CART_API_MIGRATION.md
+│   └── DEPLOYMENT.md
+└── README.md
+```
+
+## Examples & Documentation
+
+- **Quick Start**: See `examples/simple-declarative-example.html` for a minimal example
+- **Full Demo**: Check `examples/declarative-demo.html` for all features
+- **System Documentation**: Read `docs/DECLARATIVE_SYSTEM.md` for detailed docs
+- **Testing**: Use files in `tests/` directory for testing functionality
+
 ## Quick Start: Declarative Mode (Recommended)
 
 The easiest way to use Shopify Headless App is with declarative data attributes. No JavaScript coding required!

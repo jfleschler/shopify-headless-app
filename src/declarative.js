@@ -182,7 +182,6 @@ export class ShopifyDeclarativeLoader {
     html = html.replace(
       /\{\{#each (\w+)\}\}(.*?)\{\{\/each\}\}/gs,
       (match, arrayKey, innerTemplate) => {
-        console.debug(innerTemplate);
         let array = this.getNestedProperty(item, arrayKey);
 
         // Handle different array structures
@@ -237,7 +236,6 @@ export class ShopifyDeclarativeLoader {
       if (!value && ['image', 'price'].includes(key)) {
         console.warn(`Missing ${key} for item:`, item.title || item.id);
       }
-      console.debug(`Rendering ${key}:`, value);
       return value || '';
     });
     return html;
